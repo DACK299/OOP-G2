@@ -1,14 +1,17 @@
 package io.github.some_example_name.lwjgl3;
+
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class Entity {
+    private Vector2 position;
+    private Vector2 velocity;
     protected float width;
     protected float height;
-    protected float x;
-    protected float y;
     protected EntityType type;
     protected Rectangle bounds;
+    private boolean isActive;
 
     public enum EntityType {
         CIRCLE,
@@ -17,50 +20,48 @@ public class Entity {
     }
 
     public Entity(float x, float y, float width, float height, EntityType type) {
-        this.x = x;
-        this.y = y;
+        this.position = new Vector2(x, y);
+        this.velocity = new Vector2(0, 0);
         this.width = width;
         this.height = height;
         this.type = type;
         this.bounds = new Rectangle(x, y, width, height);
+        this.isActive = true;
     }
 
-    public void add_entity() {
-        // Implementation for adding entity to the game world
+    public void update(float deltaTime) {
+        // Update position based on velocity
+        position.add(velocity.x * deltaTime, velocity.y * deltaTime);
+        updateBounds();
     }
 
-    public void remove_entity() {
-        // Implementation for removing entity from the game world
+    private void updateBounds() {
+        bounds.setPosition(position.x, position.y);
     }
 
-    public void update_all_entities() {
-        // Update logic for all entities
+    // Position methods
+    public void setPosition(float x, float y) {
+        position.set(x, y);
+        updateBounds();
     }
 
-    public void render_all_entities() {
-        // Render logic for all entities
+    public void translate(float dx, float dy) {
+        position.add(dx, dy);
+        updateBounds();
     }
 
-    public void handle_collisions() {
-        // Basic collision handling logic
-    }
-
-    public void shape_triangle() {
-        // Triangle shape specific logic
+    public void setVelocity(float vx, float vy) {
+        velocity.set(vx, vy);
     }
 
     // Getters and setters
-    public float getX() { return x; }
-    public float getY() { return y; }
-    public void setX(float x) { 
-        this.x = x;
-        bounds.x = x;
-    }
-    public void setY(float y) { 
-        this.y = y;
-        bounds.y = y;
-    }
+    public float getX() { return position.x; }
+    public float getY() { return position.y; }
+    public Vector2 getPosition() { return position; }
+    public Vector2 getVelocity() { return velocity; }
     public float getWidth() { return width; }
     public float getHeight() { return height; }
     public Rectangle getBounds() { return bounds; }
+    public boolean isActive() { return isActive; }
+    public void setActive(boolean active) { this.isActive = active; }
 }
