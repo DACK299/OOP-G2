@@ -1,4 +1,4 @@
-package io.github.some_example_name;
+package io.github.some_example_name.lwjgl3;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
