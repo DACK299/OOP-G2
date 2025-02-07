@@ -1,3 +1,4 @@
+package io.github.some_example_name.lwjgl3;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import java.util.ArrayList;
 import java.util.List;
