@@ -2,29 +2,32 @@ package io.github.some_example_name.entities;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
-import io.github.some_example_name.managers.MovementManager;
+import com.badlogic.gdx.math.Vector2;
 
 public class Player extends Entity implements IMovable, ICollidable {
-    private Texture texture;
-    private MovementManager movementManager;
+    private ShapeRenderer shapeRenderer;
     private Rectangle bounds;
-    private float velocityX = 0;
-    private float velocityY = 0;
+    private Vector2 velocity;
     private final float SPEED = 200; // pixels per second
+    private Vector2 previousPosition;
     
     public Player(float x, float y, float width, float height) {
         super(x, y, width, height);
-        // Initialize the player's texture
-        texture = new Texture(Gdx.files.internal("player.png")); // You'll need to add this image
-        movementManager = new MovementManager(0.5f, SPEED);
+        shapeRenderer = new ShapeRenderer();
         bounds = new Rectangle(x, y, width, height);
+        velocity = new Vector2(0, 0);
+        previousPosition = new Vector2(x, y);
     }
     
     @Override
     public void update(float deltaTime) {
+        // Store previous position before moving
+        previousPosition.set(x, y);
+        
         // Handle movement
         move(deltaTime);
         
@@ -34,34 +37,43 @@ public class Player extends Entity implements IMovable, ICollidable {
     
     @Override
     public void render(SpriteBatch batch) {
-        batch.draw(texture, x, y, width, height);
+        // End SpriteBatch before using ShapeRenderer
+        batch.end();
+        
+        // Draw the player
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.setColor(Color.BLUE);
+        shapeRenderer.rect(x, y, width, height);
+        shapeRenderer.end();
+        
+        // Begin SpriteBatch again
+        batch.begin();
     }
     
     @Override
     public void move(float deltaTime) {
         // Reset velocity
-        velocityX = 0;
-        velocityY = 0;
+        velocity.set(0, 0);
         
         // Handle input
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-            velocityX = -SPEED;
+            velocity.x = -SPEED;
         }
         if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-            velocityX = SPEED;
+            velocity.x = SPEED;
         }
         if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-            velocityY = SPEED;
+            velocity.y = SPEED;
         }
         if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-            velocityY = -SPEED;
+            velocity.y = -SPEED;
         }
         
         // Apply movement
-        x += velocityX * deltaTime;
-        y += velocityY * deltaTime;
+        x += velocity.x * deltaTime;
+        y += velocity.y * deltaTime;
         
-        // Keep player in bounds
+        // Keep player in screen bounds
         x = Math.max(0, Math.min(x, Gdx.graphics.getWidth() - width));
         y = Math.max(0, Math.min(y, Gdx.graphics.getHeight() - height));
     }
@@ -69,7 +81,6 @@ public class Player extends Entity implements IMovable, ICollidable {
     @Override
     public boolean checkCollision(Entity other) {
         if (other instanceof ICollidable) {
-            // If the other entity is also collidable, check for intersection
             Rectangle otherBounds = ((ICollidable) other).getBounds();
             return bounds.overlaps(otherBounds);
         }
@@ -78,18 +89,19 @@ public class Player extends Entity implements IMovable, ICollidable {
     
     @Override
     public void handleCollision(Entity other) {
-        // Handle different types of collisions
-        // This will be implemented based on game mechanics
+        // On collision, move back to previous position
+        x = previousPosition.x;
+        y = previousPosition.y;
+        bounds.setPosition(x, y);
     }
     
+    @Override
     public Rectangle getBounds() {
         return bounds;
     }
     
     @Override
     public void dispose() {
-        if (texture != null) {
-            texture.dispose();
-        }
+        shapeRenderer.dispose();
     }
 }

@@ -15,6 +15,10 @@ public class EntityManager {
         entities.add(entity);
     }
     
+    public Array<Entity> getEntities() {
+        return entities;
+    }
+    
     public void update(float deltaTime) {
         for (Entity entity : entities) {
             entity.update(deltaTime);
@@ -25,5 +29,12 @@ public class EntityManager {
         for (Entity entity : entities) {
             entity.render(batch);
         }
+    }
+    
+    public void dispose() {
+        for (Entity entity : entities) {
+            entity.dispose();
+        }
+        entities.clear();
     }
 }
