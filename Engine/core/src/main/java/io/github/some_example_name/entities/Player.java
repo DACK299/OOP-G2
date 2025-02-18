@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import io.github.some_example_name.managers.MovementManager;
 
 public class Player extends Entity implements IMovable, ICollidable {
     private ShapeRenderer shapeRenderer;
@@ -14,6 +15,7 @@ public class Player extends Entity implements IMovable, ICollidable {
     private Vector2 velocity;
     private final float SPEED = 200; // pixels per second
     private Vector2 previousPosition;
+    private MovementManager movementManager;
     
     public Player(float x, float y, float width, float height) {
         super(x, y, width, height);
@@ -21,6 +23,7 @@ public class Player extends Entity implements IMovable, ICollidable {
         bounds = new Rectangle(x, y, width, height);
         velocity = new Vector2(0, 0);
         previousPosition = new Vector2(x, y);
+        movementManager = new MovementManager(0, SPEED);
     }
     
     @Override
@@ -52,22 +55,9 @@ public class Player extends Entity implements IMovable, ICollidable {
     
     @Override
     public void move(float deltaTime) {
-        // Reset velocity
-        velocity.set(0, 0);
-        
-        // Handle input
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-            velocity.x = -SPEED;
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-            velocity.x = SPEED;
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-            velocity.y = SPEED;
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-            velocity.y = -SPEED;
-        }
+        // Get velocity from movement manager
+        Vector2 newVelocity = movementManager.calculate_movement(this, deltaTime);
+        velocity.set(newVelocity);
         
         // Apply movement
         x += velocity.x * deltaTime;
@@ -89,12 +79,10 @@ public class Player extends Entity implements IMovable, ICollidable {
     
     @Override
     public void handleCollision(Entity other) {
-        // Only reset position for solid objects like walls
-        if (other instanceof Wall) {
-            x = previousPosition.x;
-            y = previousPosition.y;
-            bounds.setPosition(x, y);
-        }
+        // On collision, move back to previous position
+        x = previousPosition.x;
+        y = previousPosition.y;
+        bounds.setPosition(x, y);
     }
     
     @Override

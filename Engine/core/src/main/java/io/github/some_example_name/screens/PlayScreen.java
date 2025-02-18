@@ -16,7 +16,6 @@ import io.github.some_example_name.managers.MovementManager;
 import io.github.some_example_name.managers.ScreenManager;
 import io.github.some_example_name.entities.Player;
 import io.github.some_example_name.entities.Wall;
-import io.github.some_example_name.entities.Collectible;
 import io.github.some_example_name.entities.Entity;
 import io.github.some_example_name.entities.ICollidable;
 import io.github.some_example_name.entities.StaticObject;
@@ -32,8 +31,8 @@ public class PlayScreen implements Screen {
     private final Viewport viewport;
     private final SpriteBatch batch;
     private final EntityManager entityManager;
-    private final IOManager ioManager;
-    private final MovementManager movementManager;
+    private IOManager ioManager;
+    private MovementManager movementManager;
     private CollisionManager collisionManager;
     
     // Game entities
@@ -77,8 +76,11 @@ public class PlayScreen implements Screen {
         Wall wallLeft = new Wall(100, 100, 40, 400);
         entityManager.add_entity(wallLeft);
         
+        Wall wallLeft2 = new Wall(0, 0, 40, 600);
+        entityManager.add_entity(wallLeft2);
+        
         // Right wall
-        Wall wallRight = new Wall(600, 100, 40, 400);
+        Wall wallRight = new Wall(600, 0, 40, 600);
         entityManager.add_entity(wallRight);
         
         // Top wall
@@ -86,13 +88,8 @@ public class PlayScreen implements Screen {
         entityManager.add_entity(wallTop);
         
         // Bottom wall
-        Wall wallBottom = new Wall(100, 100, 600, 40);
+        Wall wallBottom = new Wall(0, 0, 600, 40);
         entityManager.add_entity(wallBottom);
-        
-       
-        Collectible collectible = new Collectible(300, 300, 20, 20);
-        entityManager.add_entity(collectible);
-        
         
         collisionManager.registerEntities(entityManager.getEntities());
     }
