@@ -10,6 +10,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
 
 import io.github.some_example_name.Main;
+import io.github.some_example_name.managers.IOManager;
+import io.github.some_example_name.managers.MovementManager;
 import io.github.some_example_name.managers.ScreenManager;
 
 public class MenuScreen implements Screen {
@@ -17,6 +19,8 @@ public class MenuScreen implements Screen {
     private Main game;
     private OrthographicCamera camera;
     private SpriteBatch batch;
+    private final IOManager ioManager;
+    private final MovementManager movementManager;
 
     // Textures and Fonts
     private Texture background;
@@ -32,6 +36,8 @@ public class MenuScreen implements Screen {
 
     public MenuScreen(Main game) {
         this.game = game;
+        this.ioManager = ScreenManager.getInstance().getIOManager();
+        this.movementManager = ScreenManager.getInstance().getMovementManager();
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 800, 600);
         batch = new SpriteBatch();
@@ -41,7 +47,7 @@ public class MenuScreen implements Screen {
 
     private void init() {
         // Load your menu items, textures, fonts, etc.
-        background = new Texture("MENU_Background.jpg");
+        background = new Texture("MENU_Background.png");
         font = new BitmapFont(); // By default uses a built-in font
 
         // Initialize "Play" button area

@@ -10,6 +10,8 @@ public class ScreenManager {
     private static ScreenManager instance;
     private Main game;
     private HashMap<String, Screen> screens;
+    private IOManager ioManager;
+    private MovementManager movementManager;
     private Screen currentScreen;
 
     private ScreenManager() {
@@ -23,8 +25,10 @@ public class ScreenManager {
         return instance;
     }
 
-    public void initialize(Main game) {
+    public void initialize(Main game, IOManager ioManager, MovementManager movementManager) {
         this.game = game;
+        this.ioManager = ioManager;
+        this.movementManager = movementManager;
         // Initialize screens
         screens.put("PLAY", new PlayScreen(game));
         screens.put("MENU", new MenuScreen(game));
@@ -54,5 +58,13 @@ public class ScreenManager {
         }
         screens.clear();
         instance = null;
+    }
+    // Getters for managers
+    public IOManager getIOManager() {
+        return ioManager;
+    }
+    
+    public MovementManager getMovementManager() {
+        return movementManager;
     }
 }

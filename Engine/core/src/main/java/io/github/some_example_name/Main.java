@@ -7,7 +7,7 @@ public class Main extends Game {
     @Override
     public void create() {
         ScreenManager.getInstance().initialize(this, null, null);
-        ScreenManager.getInstance().showScreen("PLAY");
+        ScreenManager.getInstance().showScreen("MENU");
     }
     
     @Override
