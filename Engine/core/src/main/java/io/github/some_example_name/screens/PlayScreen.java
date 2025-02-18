@@ -9,12 +9,14 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import io.github.some_example_name.Main;
+import io.github.some_example_name.managers.CollisionManager;
 import io.github.some_example_name.managers.EntityManager;
 import io.github.some_example_name.managers.IOManager;
 import io.github.some_example_name.managers.MovementManager;
 import io.github.some_example_name.managers.ScreenManager;
 import io.github.some_example_name.entities.Player;
 import io.github.some_example_name.entities.Wall;
+import io.github.some_example_name.entities.Collectible;
 import io.github.some_example_name.entities.Entity;
 import io.github.some_example_name.entities.ICollidable;
 import io.github.some_example_name.entities.StaticObject;
@@ -32,6 +34,7 @@ public class PlayScreen implements Screen {
     private final EntityManager entityManager;
     private final IOManager ioManager;
     private final MovementManager movementManager;
+    private CollisionManager collisionManager;
     
     // Game entities
     private Player player;
@@ -51,6 +54,7 @@ public class PlayScreen implements Screen {
         // Initialize core objects
         batch = new SpriteBatch();
         entityManager = new EntityManager();
+        collisionManager = new CollisionManager();
         
         // Initialize game objects
         init();
@@ -84,6 +88,13 @@ public class PlayScreen implements Screen {
         // Bottom wall
         Wall wallBottom = new Wall(100, 100, 600, 40);
         entityManager.add_entity(wallBottom);
+        
+       
+        Collectible collectible = new Collectible(300, 300, 20, 20);
+        entityManager.add_entity(collectible);
+        
+        
+        collisionManager.registerEntities(entityManager.getEntities());
     }
     
     @Override
@@ -110,22 +121,7 @@ public class PlayScreen implements Screen {
         entityManager.update(delta, ioManager, movementManager);
         
         // Check for collisions
-        checkCollisions();
-    }
-    
-    private void checkCollisions() {
-        // Get all entities
-        for (Entity entity : entityManager.getEntities()) {
-            // Skip if it's the player or not collidable
-            if (entity == player || !(entity instanceof ICollidable)) {
-                continue;
-            }
-            
-            // Check collision between player and entity
-            if (player.checkCollision(entity)) {
-                player.handleCollision(entity);
-            }
-        }
+        collisionManager.detectAndHandleCollisions();
     }
     
     @Override

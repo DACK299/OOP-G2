@@ -89,10 +89,12 @@ public class Player extends Entity implements IMovable, ICollidable {
     
     @Override
     public void handleCollision(Entity other) {
-        // On collision, move back to previous position
-        x = previousPosition.x;
-        y = previousPosition.y;
-        bounds.setPosition(x, y);
+        // Only reset position for solid objects like walls
+        if (other instanceof Wall) {
+            x = previousPosition.x;
+            y = previousPosition.y;
+            bounds.setPosition(x, y);
+        }
     }
     
     @Override
