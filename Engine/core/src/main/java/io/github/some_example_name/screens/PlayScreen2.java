@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import io.github.some_example_name.Main;
-import io.github.some_example_name.managers.CollisionManager;
 import io.github.some_example_name.managers.EntityManager;
 import io.github.some_example_name.managers.IOManager;
 import io.github.some_example_name.managers.MovementManager;
@@ -17,11 +16,8 @@ import io.github.some_example_name.managers.ScreenManager;
 import io.github.some_example_name.entities.Player;
 import io.github.some_example_name.entities.Wall;
 import io.github.some_example_name.entities.Door;
-import io.github.some_example_name.entities.Entity;
-import io.github.some_example_name.entities.ICollidable;
-import io.github.some_example_name.entities.StaticObject;
 
-public class PlayScreen implements Screen {
+public class PlayScreen2 implements Screen {
     // Constants
     private static final float WORLD_WIDTH = 800;
     private static final float WORLD_HEIGHT = 600;
@@ -32,14 +28,13 @@ public class PlayScreen implements Screen {
     private final Viewport viewport;
     private final SpriteBatch batch;
     private final EntityManager entityManager;
-    private IOManager ioManager;
-    private MovementManager movementManager;
-    private CollisionManager collisionManager;
+    private final IOManager ioManager;
+    private final MovementManager movementManager;
     
     // Game entities
     private Player player;
     
-    public PlayScreen(Main game) {
+    public PlayScreen2(Main game) {
         this.game = game;
         
         // Get managers from ScreenManager
@@ -54,44 +49,31 @@ public class PlayScreen implements Screen {
         // Initialize core objects
         batch = new SpriteBatch();
         entityManager = new EntityManager();
-        collisionManager = new CollisionManager();
         
         // Initialize game objects
         init();
     }
     
     private void init() {
-    	
-        StaticObject circle1 = new StaticObject(200, 200, 50, 50, new Color(0.2f, 0.2f, 0.2f, 1));
-        entityManager.add_entity(circle1);
-        
         // Create player at center of screen
         player = new Player(WORLD_WIDTH / 2 - 16, WORLD_HEIGHT / 2 - 16, 32, 32);
         entityManager.add_entity(player);
         
-        // Left wall
-        Wall wallLeft = new Wall(100, 100, 40, 400);
+        // Create walls (different layout from PlayScreen)
+        Wall wallTop = new Wall(50, 500, 700, 40);
+        Wall wallBottom = new Wall(50, 60, 700, 40);
+        Wall wallLeft = new Wall(50, 60, 40, 480);
+        Wall wallRight = new Wall(710, 60, 40, 480);
+        
+        // Add walls to entity manager
+        entityManager.add_entity(wallTop);
+        entityManager.add_entity(wallBottom);
         entityManager.add_entity(wallLeft);
-        
-        Wall wallLeft2 = new Wall(0, 0, 40, 600);
-        entityManager.add_entity(wallLeft2);
-        
-        // Right wall
-        Wall wallRight = new Wall(600, 0, 40, 600);
         entityManager.add_entity(wallRight);
         
-        // Top wall
-        Wall wallTop = new Wall(100, 460, 600, 40);
-        entityManager.add_entity(wallTop);
-        
-        // Bottom wall
-        Wall wallBottom = new Wall(0, 0, 600, 40);
-        entityManager.add_entity(wallBottom);
-        
-        Door door = new Door(40, 0, 40, 80, "PLAY2");
+        // Create door back to first screen
+        Door door = new Door(50, 400, 40, 80, "PLAY");
         entityManager.add_entity(door);
-        
-        collisionManager.registerEntities(entityManager.getEntities());
     }
     
     @Override
@@ -100,7 +82,7 @@ public class PlayScreen implements Screen {
         update(delta);
         
         // Clear screen
-        Gdx.gl.glClearColor(0.1f, 0.1f, 0.1f, 1);
+        Gdx.gl.glClearColor(0.2f, 0.2f, 0.2f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         
         // Update camera
@@ -117,43 +99,27 @@ public class PlayScreen implements Screen {
         // Update all entities with the managers
         entityManager.update(delta, ioManager, movementManager);
         
-        // Check for collisions
+        // Get the collision manager from entity manager
         entityManager.getCollisionManager().detectAndHandleCollisions();
     }
     
     @Override
     public void resize(int width, int height) {
-        // Update viewport when window is resized
         viewport.update(width, height, true);
         camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
     }
     
     @Override
-    public void pause() {
-        // Called when game is paused (on Android)
-    }
-    
-    @Override
-    public void resume() {
-        // Called when game is resumed (on Android)
-    }
-    
-    @Override
-    public void show() {
-        // Called when this screen becomes the current screen
-    }
-    
-    @Override
-    public void hide() {
-        // Called when this screen is no longer the current screen
-    }
-    
-    @Override
     public void dispose() {
-        // Dispose of all resources
         batch.dispose();
         entityManager.dispose();
     }
+    
+    // Required methods
+    @Override public void show() {}
+    @Override public void pause() {}
+    @Override public void resume() {}
+    @Override public void hide() {}
     
     // Getters
     public Player getPlayer() {

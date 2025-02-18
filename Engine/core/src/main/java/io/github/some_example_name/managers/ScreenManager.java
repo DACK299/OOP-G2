@@ -4,6 +4,8 @@ import com.badlogic.gdx.Screen;
 import io.github.some_example_name.Main;
 import io.github.some_example_name.screens.MenuScreen;
 import io.github.some_example_name.screens.PlayScreen;
+import io.github.some_example_name.screens.PlayScreen2;
+
 import java.util.HashMap;
 
 public class ScreenManager {
@@ -31,6 +33,7 @@ public class ScreenManager {
         this.movementManager = movementManager;
         // Initialize screens
         screens.put("PLAY", new PlayScreen(game));
+        screens.put("PLAY2", new PlayScreen2(game));
         screens.put("MENU", new MenuScreen(game));
         // Add more screens here as needed
     }
