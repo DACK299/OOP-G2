@@ -10,6 +10,9 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import io.github.some_example_name.Main;
 import io.github.some_example_name.managers.EntityManager;
+import io.github.some_example_name.managers.IOManager;
+import io.github.some_example_name.managers.MovementManager;
+import io.github.some_example_name.managers.ScreenManager;
 import io.github.some_example_name.entities.Player;
 import io.github.some_example_name.entities.Wall;
 import io.github.some_example_name.entities.Entity;
@@ -27,12 +30,18 @@ public class PlayScreen implements Screen {
     private final Viewport viewport;
     private final SpriteBatch batch;
     private final EntityManager entityManager;
+    private final IOManager ioManager;
+    private final MovementManager movementManager;
     
     // Game entities
     private Player player;
     
     public PlayScreen(Main game) {
         this.game = game;
+        
+        // Get managers from ScreenManager
+        this.ioManager = ScreenManager.getInstance().getIOManager();
+        this.movementManager = ScreenManager.getInstance().getMovementManager();
         
         // Setup camera and viewport
         camera = new OrthographicCamera();
@@ -51,13 +60,9 @@ public class PlayScreen implements Screen {
         // Create static background objects first (they'll be rendered first)
         // Create some decorative circles in the background
         StaticObject circle1 = new StaticObject(200, 200, 50, 50, new Color(0.2f, 0.2f, 0.2f, 1));
-        StaticObject circle2 = new StaticObject(500, 400, 70, 70, new Color(0.3f, 0.3f, 0.3f, 1));
-        StaticObject circle3 = new StaticObject(300, 350, 40, 40, new Color(0.25f, 0.25f, 0.25f, 1));
         
         // Add static objects to entity manager
         entityManager.add_entity(circle1);
-        entityManager.add_entity(circle2);
-        entityManager.add_entity(circle3);
         
         // Create player at center of screen
         player = new Player(WORLD_WIDTH / 2 - 16, WORLD_HEIGHT / 2 - 16, 32, 32);
@@ -69,7 +74,7 @@ public class PlayScreen implements Screen {
         entityManager.add_entity(wallLeft);
         
         // Right wall
-        Wall wallRight = new Wall(660, 100, 40, 400);
+        Wall wallRight = new Wall(600, 100, 40, 400);
         entityManager.add_entity(wallRight);
         
         // Top wall
@@ -101,8 +106,8 @@ public class PlayScreen implements Screen {
     }
     
     private void update(float delta) {
-        // Update all entities
-        entityManager.update(delta);
+        // Update all entities with the managers
+        entityManager.update(delta, ioManager, movementManager);
         
         // Check for collisions
         checkCollisions();

@@ -19,7 +19,7 @@ public class EntityManager {
         return entities;
     }
     
-    public void update(float deltaTime) {
+    public void update(float deltaTime, IOManager ioManager, MovementManager movementManager) {
         for (Entity entity : entities) {
             entity.update(deltaTime);
         }
