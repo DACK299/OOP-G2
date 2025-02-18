@@ -47,7 +47,7 @@ public class MenuScreen implements Screen {
 
     private void init() {
         // Load your menu items, textures, fonts, etc.
-        background = new Texture("MENU_Background.png");
+        background = new Texture("MENU_Background.jpg");
         font = new BitmapFont(); // By default uses a built-in font
 
         // Initialize "Play" button area
@@ -80,7 +80,7 @@ public class MenuScreen implements Screen {
 
         // Draw title
         font.getData().setScale(2f);
-        font.draw(batch, "My cool Game", 300, 500);
+        font.draw(batch, "INF1009 Team 2 Engine Demo", 300, 500);
 
         // Draw the buttons
         font.getData().setScale(1.5f);
