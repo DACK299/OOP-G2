@@ -32,7 +32,7 @@ public class ScreenManager {
         this.ioManager = ioManager;
         this.movementManager = movementManager;
         
-        // Create persistent screen instances
+        // Create screen instances
         if (screens.isEmpty()) {
             screens.put("PLAY", new PlayScreen(game));
             screens.put("PLAY2", new PlayScreen2(game));
@@ -60,7 +60,6 @@ public class ScreenManager {
     }
 
     public void dispose() {
-        // Only dispose screens when the game is actually closing
         for (Screen screen : screens.values()) {
             screen.dispose();
         }
@@ -68,7 +67,6 @@ public class ScreenManager {
         instance = null;
     }
 
-    // Getters for managers
     public IOManager getIOManager() {
         return ioManager;
     }

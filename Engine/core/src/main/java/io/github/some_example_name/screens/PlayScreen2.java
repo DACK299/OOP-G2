@@ -61,17 +61,11 @@ public class PlayScreen2 implements Screen {
         player = new Player(100, 400, 32, 32);
         entityManager.add_entity(player);
         
-        // Create static background objects
-        StaticObject circle1 = new StaticObject(400, 100, 60, 60, new Color(0.4f, 0.1f, 0.1f, 1));
-        StaticObject circle2 = new StaticObject(200, 300, 80, 80, new Color(0.1f, 0.4f, 0.1f, 1));
-        entityManager.add_entity(circle1);
-        entityManager.add_entity(circle2);
-        
-        // Create walls (different layout from PlayScreen)
+        // Create walls
         Wall wallTop = new Wall(50, 500, 700, 40);
         Wall wallBottom = new Wall(50, 60, 700, 40);
         Wall wallLeft = new Wall(50, 60, 40, 480);
-        Wall wallRight = new Wall(710, 60, 40, 480);
+        Wall wallRight = new Wall(600, 60, 40, 480);
         
         // Add walls to entity manager
         entityManager.add_entity(wallTop);
@@ -79,9 +73,13 @@ public class PlayScreen2 implements Screen {
         entityManager.add_entity(wallLeft);
         entityManager.add_entity(wallRight);
         
-        // Create door back to first screen
+        // Create door
         Door door = new Door(WORLD_WIDTH / 2, 400, 40, 40, "PLAY");
         entityManager.add_entity(door);
+        
+        // Create obstacle
+        Obstacle obstacle = new Obstacle(400, 250, 40, 40);
+        entityManager.add_entity(obstacle);
     }
     
     @Override
