@@ -80,7 +80,7 @@ public class MenuScreen implements Screen {
 
         // Draw title
         font.getData().setScale(2f);
-        font.draw(batch, "INF1009 Team 2 Engine Demo", 300, 500);
+        font.draw(batch, "INF1009 Team 2 Engine Demo", 200, 500);
 
         // Draw the buttons
         font.getData().setScale(1.5f);

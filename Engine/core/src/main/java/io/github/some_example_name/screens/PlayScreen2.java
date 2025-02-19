@@ -76,7 +76,7 @@ public class PlayScreen2 implements Screen {
         entityManager.add_entity(wallRight2);
         
         // Create door
-        Door door = new Door(WORLD_WIDTH / 2, 70, 40, 40, "PLAY");
+        Door door = new Door(WORLD_WIDTH / 2, 70, 60, 40, "PLAY");
         entityManager.add_entity(door);
         
         // Create obstacle
