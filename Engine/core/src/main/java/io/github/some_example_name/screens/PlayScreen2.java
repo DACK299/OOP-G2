@@ -14,6 +14,7 @@ import io.github.some_example_name.managers.EntityManager;
 import io.github.some_example_name.managers.IOManager;
 import io.github.some_example_name.managers.MovementManager;
 import io.github.some_example_name.managers.ScreenManager;
+import io.github.some_example_name.managers.SoundManager;
 import io.github.some_example_name.entities.*;
 
 public class PlayScreen2 implements Screen {
@@ -143,8 +144,14 @@ public class PlayScreen2 implements Screen {
     }
     
     // Required methods
-    @Override public void show() {}
+    @Override public void show() {
+    	SoundManager.getInstance().playMusic("play_screen2_music");
+    }
+    
     @Override public void pause() {}
     @Override public void resume() {}
-    @Override public void hide() {}
+    
+    @Override public void hide() {
+    	SoundManager.getInstance().stopMusic();
+    }
 }

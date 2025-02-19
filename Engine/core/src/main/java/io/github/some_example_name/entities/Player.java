@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import io.github.some_example_name.managers.MovementManager;
+import io.github.some_example_name.managers.SoundManager;
 
 public class Player extends Entity implements IMovable, ICollidable {
     private ShapeRenderer shapeRenderer;
@@ -83,6 +84,8 @@ public class Player extends Entity implements IMovable, ICollidable {
         x = previousPosition.x;
         y = previousPosition.y;
         bounds.setPosition(x, y);
+        
+        SoundManager.getInstance().playSound("wall_collision");
     }
     
     @Override

@@ -15,6 +15,7 @@ import io.github.some_example_name.managers.EntityManager;
 import io.github.some_example_name.managers.IOManager;
 import io.github.some_example_name.managers.MovementManager;
 import io.github.some_example_name.managers.ScreenManager;
+import io.github.some_example_name.managers.SoundManager;
 import io.github.some_example_name.entities.Player;
 import io.github.some_example_name.entities.Wall;
 import io.github.some_example_name.entities.Door;
@@ -156,11 +157,13 @@ public class PlayScreen implements Screen {
     @Override
     public void show() {
         // Called when this screen becomes the current screen
+    	SoundManager.getInstance().playMusic("play_screen_music");
     }
     
     @Override
     public void hide() {
         // Called when this screen is no longer the current screen
+    	SoundManager.getInstance().stopMusic();
     }
     
     @Override
