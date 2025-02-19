@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import io.github.some_example_name.Main;
@@ -13,9 +14,7 @@ import io.github.some_example_name.managers.EntityManager;
 import io.github.some_example_name.managers.IOManager;
 import io.github.some_example_name.managers.MovementManager;
 import io.github.some_example_name.managers.ScreenManager;
-import io.github.some_example_name.entities.Player;
-import io.github.some_example_name.entities.Wall;
-import io.github.some_example_name.entities.Door;
+import io.github.some_example_name.entities.*;
 
 public class PlayScreen2 implements Screen {
     // Constants
@@ -52,12 +51,21 @@ public class PlayScreen2 implements Screen {
         
         // Initialize game objects
         init();
+        
+        // Register all entities with the collision manager
+        entityManager.getCollisionManager().registerEntities(entityManager.getEntities());
     }
     
     private void init() {
-        // Create player at center of screen
-        player = new Player(WORLD_WIDTH / 2 - 16, WORLD_HEIGHT / 2 - 16, 32, 32);
+        // Create player at spawn point near the door that led here
+        player = new Player(100, 400, 32, 32);
         entityManager.add_entity(player);
+        
+        // Create static background objects
+        StaticObject circle1 = new StaticObject(400, 100, 60, 60, new Color(0.4f, 0.1f, 0.1f, 1));
+        StaticObject circle2 = new StaticObject(200, 300, 80, 80, new Color(0.1f, 0.4f, 0.1f, 1));
+        entityManager.add_entity(circle1);
+        entityManager.add_entity(circle2);
         
         // Create walls (different layout from PlayScreen)
         Wall wallTop = new Wall(50, 500, 700, 40);
@@ -72,7 +80,7 @@ public class PlayScreen2 implements Screen {
         entityManager.add_entity(wallRight);
         
         // Create door back to first screen
-        Door door = new Door(50, 400, 40, 80, "PLAY");
+        Door door = new Door(WORLD_WIDTH / 2, 400, 40, 40, "PLAY");
         entityManager.add_entity(door);
     }
     
@@ -93,13 +101,27 @@ public class PlayScreen2 implements Screen {
         batch.begin();
         entityManager.render(batch);
         batch.end();
+        
+        // Check for door transitions after rendering is complete
+        checkDoorTransitions();
+    }
+    
+    private void checkDoorTransitions() {
+        Array<Door> doors = entityManager.getEntitiesByType(Door.class);
+        for (Door door : doors) {
+            if (door.isPlayerColliding()) {
+                door.resetCollision();
+                ScreenManager.getInstance().showScreen(door.getTargetScreen());
+                return;
+            }
+        }
     }
     
     private void update(float delta) {
         // Update all entities with the managers
         entityManager.update(delta, ioManager, movementManager);
         
-        // Get the collision manager from entity manager
+        // Update collisions
         entityManager.getCollisionManager().detectAndHandleCollisions();
     }
     
@@ -120,17 +142,4 @@ public class PlayScreen2 implements Screen {
     @Override public void pause() {}
     @Override public void resume() {}
     @Override public void hide() {}
-    
-    // Getters
-    public Player getPlayer() {
-        return player;
-    }
-    
-    public EntityManager getEntityManager() {
-        return entityManager;
-    }
-    
-    public OrthographicCamera getCamera() {
-        return camera;
-    }
 }

@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import io.github.some_example_name.Main;
@@ -88,7 +89,7 @@ public class PlayScreen implements Screen {
         Wall wallBottom = new Wall(0, 0, 600, 40);
         entityManager.add_entity(wallBottom);
         
-        Door door = new Door(40, 0, 40, 80, "PLAY2");
+        Door door = new Door(40, 400, 40, 40, "PLAY2");
         entityManager.add_entity(door);
         
         collisionManager.registerEntities(entityManager.getEntities());
@@ -111,6 +112,20 @@ public class PlayScreen implements Screen {
         batch.begin();
         entityManager.render(batch);
         batch.end();
+        
+        checkDoorTransitions();
+    }
+    
+    private void checkDoorTransitions() {
+        // Get all doors
+        Array<Door> doors = entityManager.getEntitiesByType(Door.class);
+        for (Door door : doors) {
+            if (door.isPlayerColliding()) {
+                door.resetCollision();
+                ScreenManager.getInstance().showScreen(door.getTargetScreen());
+                return; // Exit after first transition
+            }
+        }
     }
     
     private void update(float delta) {

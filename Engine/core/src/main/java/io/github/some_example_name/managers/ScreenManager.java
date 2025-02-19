@@ -31,21 +31,25 @@ public class ScreenManager {
         this.game = game;
         this.ioManager = ioManager;
         this.movementManager = movementManager;
-        // Initialize screens
-        screens.put("PLAY", new PlayScreen(game));
-        screens.put("PLAY2", new PlayScreen2(game));
-        screens.put("MENU", new MenuScreen(game));
-        // Add more screens here as needed
+        
+        // Create persistent screen instances
+        if (screens.isEmpty()) {
+            screens.put("PLAY", new PlayScreen(game));
+            screens.put("PLAY2", new PlayScreen2(game));
+            screens.put("MENU", new MenuScreen(game));
+        }
     }
 
     public void showScreen(String screenName) {
         Screen screen = screens.get(screenName);
         if (screen != null) {
-            // Dispose current screen if it exists
+            // Hide current screen without disposing
             if (currentScreen != null) {
-                currentScreen.dispose();
+                currentScreen.hide();
             }
 
+            // Show new screen
+            screen.show();
             currentScreen = screen;
             game.setScreen(screen);
         }
@@ -56,12 +60,14 @@ public class ScreenManager {
     }
 
     public void dispose() {
+        // Only dispose screens when the game is actually closing
         for (Screen screen : screens.values()) {
             screen.dispose();
         }
         screens.clear();
         instance = null;
     }
+
     // Getters for managers
     public IOManager getIOManager() {
         return ioManager;

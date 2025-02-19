@@ -4,13 +4,12 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
-import io.github.some_example_name.managers.ScreenManager;
 
 public class Door extends Entity implements ICollidable {
     private Rectangle bounds;
     private ShapeRenderer shapeRenderer;
     private String targetScreen;
-    private boolean playerCollided = false;
+    private boolean isPlayerColliding = false;
     
     public Door(float x, float y, float width, float height, String targetScreen) {
         super(x, y, width, height);
@@ -21,25 +20,18 @@ public class Door extends Entity implements ICollidable {
     
     @Override
     public void update(float deltaTime) {
-        // Check if player has collided and handle screen transition
-        if (playerCollided) {
-            ScreenManager.getInstance().showScreen(targetScreen);
-            playerCollided = false;
-        }
+        // No screen transition logic here
     }
     
     @Override
     public void render(SpriteBatch batch) {
-        // End the SpriteBatch before using ShapeRenderer
         batch.end();
         
-        // Draw the door
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.setColor(Color.BROWN);
         shapeRenderer.rect(x, y, width, height);
         shapeRenderer.end();
         
-        // Begin the SpriteBatch again
         batch.begin();
     }
     
@@ -54,19 +46,26 @@ public class Door extends Entity implements ICollidable {
     
     @Override
     public void handleCollision(Entity e) {
-        // Only trigger screen change if it's the player
         if (e instanceof Player) {
-            playerCollided = true;
+            isPlayerColliding = true;
         }
+    }
+    
+    public boolean isPlayerColliding() {
+        return isPlayerColliding;
+    }
+    
+    public void resetCollision() {
+        isPlayerColliding = false;
+    }
+    
+    public String getTargetScreen() {
+        return targetScreen;
     }
     
     @Override
     public Rectangle getBounds() {
         return bounds;
-    }
-    
-    public String getTargetScreen() {
-        return targetScreen;
     }
     
     @Override
