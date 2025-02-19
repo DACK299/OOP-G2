@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
 import io.github.some_example_name.entities.Entity;
 import io.github.some_example_name.entities.ICollidable;
+import io.github.some_example_name.entities.Obstacle;
 
 public class EntityManager {
     private Array<Entity> entities;
@@ -44,7 +45,21 @@ public class EntityManager {
         
         // Handle collisions
         collisionManager.detectAndHandleCollisions();
+        
+     // Remove any obstacles that should be removed
+        Array<Entity> entitiesToRemove = new Array<>();
+        for (Entity entity : entities) {
+            if (entity instanceof Obstacle && ((Obstacle) entity).shouldBeRemoved()) {
+                entitiesToRemove.add(entity);
+            }
+        }
+        
+        // Remove the marked entities
+        for (Entity entity : entitiesToRemove) {
+            remove_entity(entity);
+        }
     }
+    
     
     public void render(SpriteBatch batch) {
         for (Entity entity : entities) {

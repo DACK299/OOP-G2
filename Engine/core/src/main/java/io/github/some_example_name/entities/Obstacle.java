@@ -13,7 +13,10 @@ public class Obstacle extends Entity implements IMovable, ICollidable {
     private Vector2 velocity;
     private static final float SPEED = 150; // pixels per second
     private boolean movingRight = false;
-    private boolean playerCaught = false;
+    private boolean shouldBeRemoved = false;
+    private boolean isColliding = false;
+    private float collisionTimer = 0;
+    private static final float COLLISION_DISPLAY_TIME = 1.0f; // Show message for 1 second
     private BitmapFont font;
     private Vector2 previousPosition;
     
@@ -29,7 +32,7 @@ public class Obstacle extends Entity implements IMovable, ICollidable {
     
     @Override
     public void update(float deltaTime) {
-        if (!playerCaught) {
+        if (!isColliding) {
             // Store previous position before moving
             previousPosition.set(x, y);
             
@@ -38,23 +41,34 @@ public class Obstacle extends Entity implements IMovable, ICollidable {
             
             // Update collision bounds
             bounds.setPosition(x, y);
+        } else {
+            // Update collision timer
+            collisionTimer += deltaTime;
+            if (collisionTimer >= COLLISION_DISPLAY_TIME) {
+                shouldBeRemoved = true;
+            }
         }
     }
     
     @Override
     public void render(SpriteBatch batch) {
-        // Draw the obstacle
-        batch.end();
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setColor(Color.RED);
-        shapeRenderer.rect(x, y, width, height);
-        shapeRenderer.end();
-        batch.begin();
-        
-        // Draw "You got caught!" message if player is caught
-        if (playerCaught) {
-            font.setColor(Color.RED);
-            font.draw(batch, "Collision", 300, 300);
+        // Only draw the obstacle if it hasn't been marked for removal
+        if (!shouldBeRemoved) {
+            // Draw the obstacle shape
+            if (!isColliding) {
+                batch.end();
+                shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+                shapeRenderer.setColor(Color.RED);
+                shapeRenderer.rect(x, y, width, height);
+                shapeRenderer.end();
+                batch.begin();
+            }
+            
+            // Draw collision message if colliding
+            if (isColliding) {
+                font.setColor(Color.RED);
+                font.draw(batch, "Collision!", 300, 300);
+            }
         }
     }
     
@@ -66,7 +80,7 @@ public class Obstacle extends Entity implements IMovable, ICollidable {
     
     @Override
     public boolean checkCollision(Entity other) {
-        if (other instanceof ICollidable) {
+        if (other instanceof ICollidable && !shouldBeRemoved && !isColliding) {
             Rectangle otherBounds = ((ICollidable) other).getBounds();
             return bounds.overlaps(otherBounds);
         }
@@ -84,10 +98,15 @@ public class Obstacle extends Entity implements IMovable, ICollidable {
             // Reverse direction
             velocity.x = -velocity.x;
             movingRight = !movingRight;
-        } else if (other instanceof Player && !playerCaught) {
-            playerCaught = true;
+        } else if (other instanceof Player && !isColliding) {
+            isColliding = true;
+            collisionTimer = 0;
             velocity.x = 0; // Stop moving
         }
+    }
+    
+    public boolean shouldBeRemoved() {
+        return shouldBeRemoved;
     }
     
     @Override
