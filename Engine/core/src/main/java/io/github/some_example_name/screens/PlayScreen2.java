@@ -58,28 +58,35 @@ public class PlayScreen2 implements Screen {
     
     private void init() {
         // Create player at spawn point near the door that led here
-        player = new Player(100, 400, 32, 32);
+        player = new Player(WORLD_WIDTH / 2, 150, 32, 32);
         entityManager.add_entity(player);
         
         // Create walls
         Wall wallTop = new Wall(50, 500, 700, 40);
         Wall wallBottom = new Wall(50, 60, 700, 40);
         Wall wallLeft = new Wall(50, 60, 40, 480);
-        Wall wallRight = new Wall(600, 60, 40, 480);
+        Wall wallRight1 = new Wall(200, 60, 40, 350);
+        Wall wallRight2 = new Wall(600, 60, 40, 480);
         
         // Add walls to entity manager
         entityManager.add_entity(wallTop);
         entityManager.add_entity(wallBottom);
         entityManager.add_entity(wallLeft);
-        entityManager.add_entity(wallRight);
+        entityManager.add_entity(wallRight1);
+        entityManager.add_entity(wallRight2);
         
         // Create door
-        Door door = new Door(WORLD_WIDTH / 2, 400, 40, 40, "PLAY");
+        Door door = new Door(WORLD_WIDTH / 2, 70, 40, 40, "PLAY");
         entityManager.add_entity(door);
         
         // Create obstacle
-        Obstacle obstacle = new Obstacle(400, 250, 40, 40);
-        entityManager.add_entity(obstacle);
+        Obstacle obstacle1 = new Obstacle(400, 300, 70, 40);
+        Obstacle obstacle2 = new Obstacle(100, 350, 40, 40);
+        Obstacle obstacle3 = new Obstacle(150, 150, 10, 10);
+        
+        entityManager.add_entity(obstacle1);
+        entityManager.add_entity(obstacle2);
+        entityManager.add_entity(obstacle3);
     }
     
     @Override

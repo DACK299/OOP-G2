@@ -54,7 +54,7 @@ public class Obstacle extends Entity implements IMovable, ICollidable {
         // Draw "You got caught!" message if player is caught
         if (playerCaught) {
             font.setColor(Color.RED);
-            font.draw(batch, "You got caught!", 300, 300);
+            font.draw(batch, "Collision", 300, 300);
         }
     }
     
