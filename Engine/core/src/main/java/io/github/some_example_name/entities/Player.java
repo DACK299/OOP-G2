@@ -85,7 +85,9 @@ public class Player extends Entity implements IMovable, ICollidable {
         y = previousPosition.y;
         bounds.setPosition(x, y);
         
+        if (other instanceof Wall) {
         SoundManager.getInstance().playSound("wall_collision");
+        }
     }
     
     @Override
