@@ -6,10 +6,11 @@ import io.github.some_example_name.managers.ScreenManager;
 public class Main extends Game {
     @Override
     public void create() {
+        System.out.println("Running...");
         ScreenManager.getInstance().initialize(this, null, null);
         ScreenManager.getInstance().showScreen("MENU");
     }
-    
+
     @Override
     public void dispose() {
         super.dispose();
