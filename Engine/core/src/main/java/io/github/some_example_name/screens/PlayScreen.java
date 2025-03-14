@@ -90,7 +90,7 @@ public class PlayScreen implements Screen {
         Wall wallBottom = new Wall(0, 0, 600, 40);
         entityManager.add_entity(wallBottom);
         
-        Door door = new Door(40, 450, 60, 40, "PLAY2");
+        Door door = new Door(40, 450, 60, 40, "CAR_GAME");
         entityManager.add_entity(door);
         
         collisionManager.registerEntities(entityManager.getEntities());

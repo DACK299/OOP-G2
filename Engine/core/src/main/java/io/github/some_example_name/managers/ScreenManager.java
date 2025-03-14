@@ -2,6 +2,7 @@ package io.github.some_example_name.managers;
 
 import com.badlogic.gdx.Screen;
 import io.github.some_example_name.Main;
+import io.github.some_example_name.screens.CarGameScreen;
 import io.github.some_example_name.screens.MenuScreen;
 import io.github.some_example_name.screens.PlayScreen;
 import io.github.some_example_name.screens.PlayScreen2;
@@ -29,14 +30,27 @@ public class ScreenManager {
 
     public void initialize(Main game, IOManager ioManager, MovementManager movementManager) {
         this.game = game;
-        this.ioManager = ioManager;
-        this.movementManager = movementManager;
+        
+        // Create IOManager if not provided
+        if (ioManager == null) {
+            this.ioManager = IOManager.getInstance();
+        } else {
+            this.ioManager = ioManager;
+        }
+        
+        // Create MovementManager if not provided
+        if (movementManager == null) {
+            this.movementManager = new MovementManager(10, 200);
+        } else {
+            this.movementManager = movementManager;
+        }
         
         // Create screen instances
         if (screens.isEmpty()) {
             screens.put("PLAY", new PlayScreen(game));
             screens.put("PLAY2", new PlayScreen2(game));
             screens.put("MENU", new MenuScreen(game));
+            screens.put("CAR_GAME", new CarGameScreen(game));
         }
     }
 
