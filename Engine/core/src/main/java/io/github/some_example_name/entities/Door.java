@@ -7,7 +7,6 @@ import com.badlogic.gdx.math.Rectangle;
 
 public class Door extends Entity implements ICollidable {
     private Rectangle bounds;
-    private ShapeRenderer shapeRenderer;
     private String targetScreen;
     private boolean isPlayerColliding = false;
     
@@ -15,7 +14,6 @@ public class Door extends Entity implements ICollidable {
         super(x, y, width, height);
         this.targetScreen = targetScreen;
         bounds = new Rectangle(x, y, width, height);
-        shapeRenderer = new ShapeRenderer();
     }
     
     @Override
@@ -24,15 +22,14 @@ public class Door extends Entity implements ICollidable {
     }
     
     @Override
-    public void render(SpriteBatch batch) {
-        batch.end();
-        
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+    public void renderShape(ShapeRenderer shapeRenderer) {
         shapeRenderer.setColor(Color.BROWN);
         shapeRenderer.rect(x, y, width, height);
-        shapeRenderer.end();
-        
-        batch.begin();
+    }
+    
+    @Override
+    public void renderSprite(SpriteBatch batch) {
+        // No sprites to render
     }
     
     @Override
@@ -70,6 +67,6 @@ public class Door extends Entity implements ICollidable {
     
     @Override
     public void dispose() {
-        shapeRenderer.dispose();
+        // Nothing to dispose
     }
 }

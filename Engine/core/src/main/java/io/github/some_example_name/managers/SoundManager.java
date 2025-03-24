@@ -34,7 +34,7 @@ public class SoundManager {
         soundEffects.put("wall_collision", Gdx.audio.newSound(Gdx.files.internal("sounds/wall_hit.wav")));
         
         // Load music
-        music.put("play_screen_music", Gdx.audio.newMusic(Gdx.files.internal("music/play_screen.mp3")));
+        music.put("play_screen_music", Gdx.audio.newMusic(Gdx.files.internal("sounds/Tokyo Drift (Fast & Furious) (From The Fast And The Furious_ Tokyo Drift Soundtrack).mp3")));
         music.put("play_screen2_music", Gdx.audio.newMusic(Gdx.files.internal("music/play_screen2.mp3")));
     }
     
@@ -104,6 +104,12 @@ public class SoundManager {
     }
     
     public void dispose() {
+        // Stop any playing music first
+        if (currentMusic != null) {
+            currentMusic.stop();
+            currentMusic = null;
+        }
+        
         // Dispose all sound effects
         for (Sound sound : soundEffects.values()) {
             sound.dispose();
@@ -112,6 +118,7 @@ public class SoundManager {
         
         // Dispose all music
         for (Music musicTrack : music.values()) {
+            musicTrack.stop();
             musicTrack.dispose();
         }
         music.clear();

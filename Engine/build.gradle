@@ -29,7 +29,8 @@ allprojects {
 
 configure(subprojects) {
   apply plugin: 'java-library'
-  sourceCompatibility = 8
+  sourceCompatibility = 17
+  targetCompatibility = 17
 
   // From https://lyze.dev/2021/04/29/libGDX-Internal-Assets-List/
   // The article can be helpful when using assets.txt in your project.
@@ -53,16 +54,16 @@ configure(subprojects) {
 
   compileJava {
     options.incremental = true
+    options.release = 17
   }
 }
 
 subprojects {
   version = "$projectVersion"
-  ext.appName = 'AbstractEngine'
+  ext.appName = 'DrunkDrivingSimulator'
   repositories {
     mavenCentral()
     maven { url 'https://s01.oss.sonatype.org' }
-    // You may want to remove the following line if you have errors downloading dependencies.
     mavenLocal()
     maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
     maven { url 'https://s01.oss.sonatype.org/content/repositories/snapshots/' }
@@ -70,4 +71,4 @@ subprojects {
   }
 }
 
-eclipse.project.name = 'AbstractEngine' + '-parent'
+eclipse.project.name = 'DrunkDrivingSimulator' + '-parent'

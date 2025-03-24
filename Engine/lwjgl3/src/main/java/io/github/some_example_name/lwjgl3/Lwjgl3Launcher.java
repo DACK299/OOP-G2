@@ -2,13 +2,34 @@ package io.github.some_example_name.lwjgl3;
 
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
+import com.badlogic.gdx.Files;
 import io.github.some_example_name.Main;
 
 /** Launches the desktop (LWJGL3) application. */
 public class Lwjgl3Launcher {
     public static void main(String[] args) {
-        if (StartupHelper.startNewJvmIfRequired()) return; // This handles macOS support and helps on Windows.
-        createApplication();
+        if (StartupHelper.startNewJvmIfRequired()) return;
+        try {
+            // Basic graphics settings
+            System.setProperty("org.lwjgl.opengl.Display.allowSoftwareOpenGL", "true");
+            System.setProperty("org.lwjgl.system.allocator", "system");
+            System.setProperty("org.lwjgl.opengl.Display.enableHighDPI", "false");
+            System.setProperty("org.lwjgl.glfw.libname", "glfw");
+            
+            // Error handling
+            Thread.setDefaultUncaughtExceptionHandler((thread, throwable) -> {
+                System.err.println("Critical error in thread " + thread);
+                System.err.println("Error details:");
+                throwable.printStackTrace(System.err);
+                System.exit(1);
+            });
+            
+            createApplication();
+        } catch (Exception e) {
+            System.err.println("Failed to create application:");
+            e.printStackTrace();
+            System.exit(1);
+        }
     }
 
     private static Lwjgl3Application createApplication() {
@@ -17,19 +38,22 @@ public class Lwjgl3Launcher {
 
     private static Lwjgl3ApplicationConfiguration getDefaultConfiguration() {
         Lwjgl3ApplicationConfiguration configuration = new Lwjgl3ApplicationConfiguration();
-        configuration.setTitle("AbstractEngine");
-        //// Vsync limits the frames per second to what your hardware can display, and helps eliminate
-        //// screen tearing. This setting doesn't always work on Linux, so the line after is a safeguard.
-        configuration.useVsync(true);
-        //// Limits FPS to the refresh rate of the currently active monitor, plus 1 to try to match fractional
-        //// refresh rates. The Vsync setting above should limit the actual FPS to match the monitor.
-        configuration.setForegroundFPS(Lwjgl3ApplicationConfiguration.getDisplayMode().refreshRate + 1);
-        //// If you remove the above line and set Vsync to false, you can get unlimited FPS, which can be
-        //// useful for testing performance, but can also be very stressful to some hardware.
-        //// You may also need to configure GPU drivers to fully disable Vsync; this can cause screen tearing.
-        configuration.setWindowedMode(640, 480);
-        //// You can change these files; they are in lwjgl3/src/main/resources/ .
-        configuration.setWindowIcon("libgdx128.png", "libgdx64.png", "libgdx32.png", "libgdx16.png");
+        configuration.setTitle("Drunk Driving Simulator");
+        
+        // Basic graphics settings
+        configuration.setOpenGLEmulation(Lwjgl3ApplicationConfiguration.GLEmulation.GL20, 2, 0);
+        configuration.setBackBufferConfig(8, 8, 8, 8, 16, 0, 0);
+        configuration.useVsync(false);
+        configuration.setForegroundFPS(60);
+        configuration.setWindowedMode(800, 600);
+        configuration.setResizable(false);
+        
+        // Additional settings
+        configuration.setTransparentFramebuffer(false);
+        configuration.setInitialVisible(true);
+        configuration.setDecorated(true);
+        configuration.setIdleFPS(20);
+        
         return configuration;
     }
 }

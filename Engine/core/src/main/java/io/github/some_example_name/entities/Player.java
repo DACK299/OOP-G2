@@ -11,7 +11,6 @@ import io.github.some_example_name.managers.MovementManager;
 import io.github.some_example_name.managers.SoundManager;
 
 public class Player extends Entity implements IMovable, ICollidable {
-    private ShapeRenderer shapeRenderer;
     private Rectangle bounds;
     private Vector2 velocity;
     private final float SPEED = 200; // pixels per second
@@ -20,7 +19,6 @@ public class Player extends Entity implements IMovable, ICollidable {
     
     public Player(float x, float y, float width, float height) {
         super(x, y, width, height);
-        shapeRenderer = new ShapeRenderer();
         bounds = new Rectangle(x, y, width, height);
         velocity = new Vector2(0, 0);
         previousPosition = new Vector2(x, y);
@@ -40,18 +38,14 @@ public class Player extends Entity implements IMovable, ICollidable {
     }
     
     @Override
-    public void render(SpriteBatch batch) {
-        // End SpriteBatch before using ShapeRenderer
-        batch.end();
-        
-        // Draw the player
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+    public void renderShape(ShapeRenderer shapeRenderer) {
         shapeRenderer.setColor(Color.BLUE);
         shapeRenderer.rect(x, y, width, height);
-        shapeRenderer.end();
-        
-        // Begin SpriteBatch again
-        batch.begin();
+    }
+    
+    @Override
+    public void renderSprite(SpriteBatch batch) {
+        // No sprites to render
     }
     
     @Override
@@ -86,7 +80,7 @@ public class Player extends Entity implements IMovable, ICollidable {
         bounds.setPosition(x, y);
         
         if (other instanceof Wall) {
-        SoundManager.getInstance().playSound("wall_collision");
+            SoundManager.getInstance().playSound("wall_collision");
         }
     }
     
@@ -97,6 +91,6 @@ public class Player extends Entity implements IMovable, ICollidable {
     
     @Override
     public void dispose() {
-        shapeRenderer.dispose();
+        // Nothing to dispose
     }
 }

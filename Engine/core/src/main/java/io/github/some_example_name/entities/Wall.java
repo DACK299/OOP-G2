@@ -7,13 +7,11 @@ import com.badlogic.gdx.math.Rectangle;
 
 public class Wall extends Entity implements ICollidable {
     private Rectangle bounds;
-    private ShapeRenderer shapeRenderer;
     
     public Wall(float x, float y, float width, float height) {
         super(x, y, width, height);
         // Create collision bounds
         bounds = new Rectangle(x, y, width, height);
-        shapeRenderer = new ShapeRenderer();
     }
     
     @Override
@@ -22,18 +20,14 @@ public class Wall extends Entity implements ICollidable {
     }
     
     @Override
-    public void render(SpriteBatch batch) {
-        // End the SpriteBatch before using ShapeRenderer
-        batch.end();
-        
-        // Draw the wall
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+    public void renderShape(ShapeRenderer shapeRenderer) {
         shapeRenderer.setColor(Color.GRAY);
         shapeRenderer.rect(x, y, width, height);
-        shapeRenderer.end();
-        
-        // Begin the SpriteBatch again
-        batch.begin();
+    }
+    
+    @Override
+    public void renderSprite(SpriteBatch batch) {
+        // No sprites to render
     }
     
     @Override
@@ -57,6 +51,6 @@ public class Wall extends Entity implements ICollidable {
     
     @Override
     public void dispose() {
-        shapeRenderer.dispose();
+        // Nothing to dispose
     }
 }

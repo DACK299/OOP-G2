@@ -6,6 +6,7 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector2;
 import java.util.HashMap;
 import java.util.Map;
+import io.github.some_example_name.settings.Settings;
 
 public class IOManager implements InputProcessor {
     private static IOManager instance;
@@ -40,6 +41,26 @@ public class IOManager implements InputProcessor {
     
     public boolean isMouseButtonPressed(int button) {
         return button >= 0 && button < mouseButtonsPressed.length && mouseButtonsPressed[button];
+    }
+    
+    public boolean isLeftPressed() {
+        return Gdx.input.isKeyPressed(Input.Keys.LEFT);
+    }
+    
+    public boolean isRightPressed() {
+        return Gdx.input.isKeyPressed(Input.Keys.RIGHT);
+    }
+    
+    public boolean isAPressed() {
+        return Gdx.input.isKeyPressed(Input.Keys.A);
+    }
+    
+    public boolean isDPressed() {
+        return Gdx.input.isKeyPressed(Input.Keys.D);
+    }
+    
+    public boolean isSpacePressed() {
+        return Gdx.input.isKeyPressed(Input.Keys.SPACE);
     }
     
     // InputProcessor methods
